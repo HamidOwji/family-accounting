@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from ..models.user import User
-from ..models.profile import Profile
+from ..models.users import User
+from ..models.profiles import Profile
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, created, **kwargs):
