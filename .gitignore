@@ -125,7 +125,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
+# ignore postgres database which is located in local directory and mapped to docker
+data
 
 #####################################################
 

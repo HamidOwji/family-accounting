@@ -18,9 +18,12 @@ const HomePage = () => {
       <Typography variant="h3" 
         sx={{
           color: 'text.primary',
-          fontSize: '3rem',
+          fontSize: '2rem',
           fontWeight: 'bold',
+          textAlign: 'center',
           mb: 2,
+          pr: 3,
+          pl: 3,
         }}
       >
         Family accounting
@@ -29,7 +32,10 @@ const HomePage = () => {
         sx={{
           color: 'secondary.main',
           fontSize: '1.5rem',
+          textAlign: 'center',
           mb: 2,
+          pr: 3,
+          pl: 3,
         }}
       >
         spend your money as smart as possible!
@@ -47,11 +53,13 @@ const HomePage = () => {
       <Box
         sx={{
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'space-around',
-          width: '300px',
+          width: '12rem',
+          gap: '1rem',
         }}
       >
-        <Button variant="contained" color="primary">
+        <Button  variant="contained" color="secondary">
           Create an Account
         </Button>
         <Button variant="outlined" color="primary">
