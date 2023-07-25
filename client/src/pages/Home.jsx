@@ -13,6 +13,8 @@ const HomePage = () => {
         justifyContent: 'center',
         minHeight: '100vh',
         bgcolor: 'background.default',
+        pt: '1rem',
+        pb: '1rem',
       }}
     >
       <Typography variant="h3" 
@@ -45,9 +47,10 @@ const HomePage = () => {
         src='/assets/homepage-figure.png'
         alt="App Photo"
         sx={{
-          width: '300px',
+          width: '100%',
           height: 'auto',
           mb: 2,
+          filter: 'opacity(50%)',
         }}
       />
       <Box
@@ -55,12 +58,12 @@ const HomePage = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-around',
-          width: '12rem',
+          width: '10rem',
           gap: '1rem',
         }}
       >
         <Button  variant="contained" color="secondary">
-          Create an Account
+          Sign up!
         </Button>
         <Button variant="outlined" color="primary">
           Sign In
