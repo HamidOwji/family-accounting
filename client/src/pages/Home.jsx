@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { Link } from 'react-router-dom'
 
 const HomePage = () => {
   return (
@@ -62,7 +63,7 @@ const HomePage = () => {
           gap: '1rem',
         }}
       >
-        <Button  variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" component={Link} to="/signup">
           Sign up!
         </Button>
         <Button variant="outlined" color="primary">

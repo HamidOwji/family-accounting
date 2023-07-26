@@ -11,9 +11,11 @@ COPY package-lock.json ./
 RUN npm install --silent
 RUN npm install vite -g --silent
 
-# Install Material-UI and its peer dependencies
-RUN npm install @mui/material @emotion/react @emotion/styled @mui/styles
+# Install Material-UI, its peer dependencies and icons
+RUN npm install @mui/material @emotion/react @emotion/styled @mui/styles @mui/icons-material
 
+# Install React Router
+RUN npm install react-router-dom
 
 # add app
 COPY . ./
