@@ -3,12 +3,47 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
 
 
 export default function Signup() {
 
-  
+    const [formData, setFormData] = React.useState({
+      email: '',
+      password: '',
+      repeatPassword: '',
+    })
+
+    function handleChange(event){
+      setFormData(prevFormData => {
+        return {
+          ...prevFormData,
+          [event.target.name]: event.target.value,
+        }
+      })
+    }
+
+    const [emailErrors, setEmailErrors] = React.useState('')
+    const [passwordErrors, setPasswordErrors] = React.useState('')
+
+    function handleSubmit(event){
+      event.preventDefault()
+      const { email, password, repeatPassword } = formData
+      if (password === repeatPassword){
+        const re = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+        if (re.test(email)){
+          setEmailErrors('')
+          setPasswordErrors('')
+          console.log('Okay')
+        }else{
+          setEmailErrors('Please insert email in correct format')
+          return
+        }
+      }else{
+        setPasswordErrors('passwords do not match')
+        return
+      }
+    }
+
   return (
     <Box
     sx={{
@@ -62,15 +97,38 @@ export default function Signup() {
         noValidate
         autoComplete="off"
       >
-        <TextField id="outlined-basic" label="Email" variant="outlined" />
-        <TextField id="outlined-basic" label="Password" variant="outlined" />
-        <TextField id="outlined-basic" label="Repeat Password" variant="outlined" />
-        <Button variant="contained" color="secondary" component={Link} to="/">
+        <TextField
+          label="Email"
+          variant="outlined"
+          name='email'
+          value={formData.email}
+          onChange={handleChange} />
+        {emailErrors && <Box>{emailErrors}</Box>}
+        <TextField
+          label="Password"
+          type="password"
+          variant="outlined"
+          name='password'
+          value={formData.password}
+          onChange={handleChange} 
+          />
+        <TextField
+          label="Repeat Password"
+          type="password"
+          variant="outlined"
+          name='repeatPassword'
+          value={formData.repeatPassword}
+          onChange={handleChange} 
+          />
+        {passwordErrors && <Box>{passwordErrors}</Box>}
+        <Button
+         variant="contained"
+         color="secondary"
+         onClick={handleSubmit}>
           Sign up!
         </Button>
       </Box>
     </Box>
-
     </Box>
   );
 }
