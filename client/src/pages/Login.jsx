@@ -6,13 +6,12 @@ import Typography from '@mui/material/Typography';
 import usePostData from '../hooks/usePostData';
 
 
-export default function Signup() {
+export default function Login() {
 
     const [postData, isLoading, data, error] = usePostData('http://localhost:8000/accounts/api/v1/users/');
     const [formData, setFormData] = React.useState({
       email: '',
       password: '',
-      repeatPassword: '',
     })
 
     function handleChange(event){
@@ -24,18 +23,9 @@ export default function Signup() {
       })
     }
 
-    const [emailErrors, setEmailErrors] = React.useState('')
-    const [passwordErrors, setPasswordErrors] = React.useState('')
-
     const handleSubmit = async (event) => {
       event.preventDefault()
-      const { email, password, repeatPassword } = formData
-      if (password === repeatPassword){
-        const re = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-        if (re.test(email)){
-
-          setEmailErrors('')
-          setPasswordErrors('')
+      const { email, password } = formData
 
           const dataToSend = {
             email: email,
@@ -43,15 +33,6 @@ export default function Signup() {
             password2: repeatPassword,
           };
           await postData(dataToSend);
-
-        }else{
-          setEmailErrors('Please insert email in correct format')
-          return
-        }
-      }else{
-        setPasswordErrors('passwords do not match')
-        return
-      }
     }
 
   return (
@@ -93,7 +74,7 @@ export default function Signup() {
           pl: 3,
         }}
       >
-        Sign up!
+        Login!
       </Typography>
       <Box
         component="form"
@@ -113,7 +94,6 @@ export default function Signup() {
           name='email'
           value={formData.email}
           onChange={handleChange} />
-        {emailErrors && <Box>{emailErrors}</Box>}
         <TextField
           label="Password"
           type="password"
@@ -122,18 +102,6 @@ export default function Signup() {
           value={formData.password}
           onChange={handleChange} 
           />
-        <TextField
-          label="Repeat Password"
-          type="password"
-          variant="outlined"
-          name='repeatPassword'
-          value={formData.repeatPassword}
-          onChange={handleChange} 
-          />
-        {passwordErrors && <Box>{passwordErrors}</Box>}
-        {error && <Box>
-          {error && typeof error === 'object' ? JSON.stringify(error) : error}
-          </Box>}
         <Button
          variant="contained"
          color="secondary"
@@ -141,9 +109,6 @@ export default function Signup() {
           Sign up!
         </Button>
       </Box>
-    </Box>
-    <Box>
-    {/* {data && typeof data === 'object' ? JSON.stringify(data) : data} */}
     </Box>
     </Box>
   );

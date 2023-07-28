@@ -17,6 +17,8 @@ RUN npm install @mui/material @emotion/react @emotion/styled @mui/styles @mui/ic
 # Install React Router
 RUN npm install react-router-dom
 
+RUN npm install axios
+RUN npm install js-cookie
 # add app
 COPY . ./
 

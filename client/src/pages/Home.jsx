@@ -66,7 +66,7 @@ const HomePage = () => {
         <Button variant="contained" color="secondary" component={Link} to="/signup">
           Sign up!
         </Button>
-        <Button variant="outlined" color="primary">
+        <Button variant="outlined" color="primary" component={Link} to="/login">
           Sign In
         </Button>
       </Box>
