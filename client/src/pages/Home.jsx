@@ -48,7 +48,7 @@ const HomePage = () => {
         src='/assets/homepage-figure.png'
         alt="App Photo"
         sx={{
-          width: '100%',
+          width: '200px',
           height: 'auto',
           mb: 2,
           filter: 'opacity(50%)',

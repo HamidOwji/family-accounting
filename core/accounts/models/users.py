@@ -8,7 +8,7 @@ from django.utils import timezone
 
 class UserManager(BaseUserManager):
     """
-    Custome base user model manager
+    Custom base user model manager
     """
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -32,13 +32,14 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
-    Custome user model for authentication manager with unique email
+    Custom user model for authentication manager with unique email
     """
     email = models.EmailField(max_length=255, unique=True)
     is_verified = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    is_app_manager = models.BooleanField(default=False)
     created_date = models.DateTimeField(default=timezone.now)
     updated_date = models.DateTimeField(auto_now=True)
 
