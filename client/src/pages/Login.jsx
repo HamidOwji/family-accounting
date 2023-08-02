@@ -106,7 +106,7 @@ export default function Login() {
          variant="contained"
          color="secondary"
          onClick={handleSubmit}>
-          Sign up!
+          Login!
         </Button>
       </Box>
     </Box>
