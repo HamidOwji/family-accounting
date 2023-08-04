@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import usePostData from '../hooks/usePostData';
 
 
-export default function Signup() {
+export default function SignUp() {
 
     const [postData, isLoading, data, error] = usePostData('http://localhost:8000/accounts/api/v1/users/');
     const [formData, setFormData] = React.useState({
@@ -37,8 +37,7 @@ export default function Signup() {
           setEmailErrors('')
           setPasswordErrors('')
 
-          const dataToSend = {
-            email: email,
+          const dataToSend = {              email: email,
             password: password,
             password2: repeatPassword,
           };
@@ -72,8 +71,8 @@ export default function Signup() {
       border: '2px solid', 
       borderColor: 'secondary.main', 
       borderRadius: '1.5rem', 
-      width: '18rem', 
-      height: '28rem', 
+      mr: '1.7rem',
+      ml: '1.7rem',
       display: 'flex',
       flexDirection: 'column', 
       alignItems: 'center', 
@@ -85,7 +84,7 @@ export default function Signup() {
       <Typography variant="h3" 
         sx={{
           color: 'text.primary',
-          fontSize: '2rem',
+          fontSize: '1.5rem',
           fontWeight: 'bold',
           textAlign: 'center',
           mb: 2,

@@ -19,7 +19,7 @@ const theme = createTheme({
               color: '#004561', // Change label color on focus
             }, // changes the color of the label
             fontWeight: 'bold', // makes the label text bold
-            fontSize: '1rem',
+            fontSize: '0.8rem',
             // add more styles as needed
           },
         },

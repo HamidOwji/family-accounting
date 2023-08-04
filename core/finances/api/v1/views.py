@@ -11,8 +11,9 @@ class ExpenseCategoryViewSet(viewsets.ModelViewSet):
     queryset = ExpenseCategory.objects.all()
     serializer_class = ExpenseCategorySerializer
 
-
-
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
 class PaymentCategoryViewSet(viewsets.ModelViewSet):
     queryset = PaymentCategory.objects.all()
     serializer_class = PaymentCategorySerializer
