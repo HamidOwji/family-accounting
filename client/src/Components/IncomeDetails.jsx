@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TextField, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
 
 
 export default function IncomeDetails() {
@@ -105,6 +105,18 @@ export default function IncomeDetails() {
                     },
                 }}
             />
+            <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                sx={{
+                    width: '100%',
+                    mt: '1rem',
+                    mb: '1rem',
+                }}
+                >
+                Save
+            </Button>
         </Box>
     )
 }

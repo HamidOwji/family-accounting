@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { TextField, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
 
 
 export default function PayDetails() {
@@ -212,6 +212,18 @@ export default function PayDetails() {
                     {formData.image && <span>{formData.image.name}</span>}
                 </Box>
             </Box>
+            <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                sx={{
+                    width: '100%',
+                    mt: '1rem',
+                    mb: '1rem',
+                }}
+                >
+                Save
+            </Button>
         </Box>
 
     )

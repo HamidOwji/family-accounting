@@ -8,13 +8,9 @@ export default function Operations() {
 
     const [financialDetail, setFinancialDetail] = useState(''); // State for financial detail selection
 
-  
-
-
     function handleFinancialDetailChange(event) {
         setFinancialDetail(event.target.value);
     }
-
 
     return (
         <AppFrame>
@@ -45,21 +41,6 @@ export default function Operations() {
 
             {financialDetail === 'pay_details' && <PayDetails />}
             {financialDetail === 'income_details' && <IncomeDetails />}
-             
-
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    sx={{
-                        width: '60%',
-                        mt: '1rem',
-                        mb: '1rem',
-                    }}
-                >
-                    Save
-                </Button>
 
         </AppFrame>
     )
