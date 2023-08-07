@@ -11,24 +11,29 @@ const usePostData = (url) => {
         setIsLoading(true);
         setError(null);
         setData(null);
-
+    
         const csrftoken = Cookies.get('csrftoken');
-
+        let response;
+    
         try {
-            const response = await axios.post(url, formData, {
+            response = await axios.post(url, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrftoken
                 }
             });
-
+    
             setData(response.data);
             setIsLoading(false);
         } catch (err) {
             setError(err.message);
             setIsLoading(false);
         }
+    
+        return response
     };
+    
+    
 
     return [postData, isLoading, data, error];
 };

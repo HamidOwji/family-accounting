@@ -63,7 +63,7 @@ const HomePage = () => {
           gap: '1rem',
         }}
       >
-        <Button variant="contained" color="secondary" component={Link} to="/signup">
+        <Button variant="contained" color="secondary" component={Link} to="/sign-up">
           Sign up!
         </Button>
         <Button variant="outlined" color="primary" component={Link} to="/login">

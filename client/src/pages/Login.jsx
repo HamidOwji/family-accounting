@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,11 +9,12 @@ import usePostData from '../hooks/usePostData';
 
 export default function Login() {
 
-    const [postData, isLoading, data, error] = usePostData('http://localhost:8000/accounts/api/v1/users/');
+    const [postData, isLoading, data, error] = usePostData('http://localhost:8000/accounts/api/v1/login/');
     const [formData, setFormData] = React.useState({
       email: '',
       password: '',
     })
+    const navigate = useNavigate();
 
     function handleChange(event){
       setFormData(prevFormData => {
@@ -30,9 +32,14 @@ export default function Login() {
           const dataToSend = {
             email: email,
             password: password,
-            password2: repeatPassword,
           };
-          await postData(dataToSend);
+          const response = await postData(dataToSend);
+          // console.log(response);
+          if (response.data && response.data.success) {
+            navigate('/operations');
+          } else {
+            // alert(response.data.message);
+          }
     }
 
   return (
