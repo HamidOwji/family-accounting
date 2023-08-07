@@ -26,8 +26,8 @@ class ExpenseItem(models.Model):
     title = models.CharField(max_length=100)
     amount = models.IntegerField()
     payment_category = models.ForeignKey(PaymentCategory, on_delete=models.CASCADE)
-    description = models.CharField(max_length=100)
-    receive_image = models.ImageField()
+    description = models.CharField(blank=True,null=True, max_length=100)
+    receive_image = models.ImageField(blank=True,null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

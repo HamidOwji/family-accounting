@@ -40,6 +40,7 @@ export default function IncomeDetails() {
 
     function handleSubmit(event) {
         event.preventDefault()
+        
     }
 
     return (

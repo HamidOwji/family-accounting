@@ -13,14 +13,15 @@ export default function PayDetails() {
         image: null
     })
 
-    const [categories, setCategories] = useState([]);
+    const [expenseCategories, setExpenseCategories] = useState([]);
+    const [paymentCategories, setPaymentCategories] = useState([]);
 
-    // fetch categories from the backend when component mounts
+    // fetch expenseCategories from the backend when component mounts
     useEffect(() => {
         fetch('http://localhost:8000/finances/api/v1/expense-category/')
             .then(response => response.json())
             .then(data => {
-                setCategories(data);
+                setExpenseCategories(data);
             // Check if data has at least one element and that the element has a title
             if(data[0] && data[0].title) {
                 setFormData(prevFormData => {
@@ -31,6 +32,20 @@ export default function PayDetails() {
                 })
             }
         });
+        fetch('http://localhost:8000/finances/api/v1/payment-category/')
+            .then(response => response.json())
+            .then(data => {
+                setPaymentCategories(data);
+            // Check if data has at least one element and that the element has a title
+            if(data[0] && data[0].title) {
+                setFormData(prevFormData => {
+                    return {
+                        ...prevFormData,
+                        payment_category: data[0].title // Set the first category as the default selected value
+                    }
+                })
+            }
+        });       
     }, [])
 
 
@@ -44,7 +59,30 @@ export default function PayDetails() {
     }
 
     function handleSubmit(event) {
-        event.preventDefault()
+        event.preventDefault();
+        
+        const formDataToSend = new FormData();
+    
+        // Add all the form data
+        for (const key in formData) {
+            formDataToSend.append(key, formData[key]);
+        }
+    
+        // Sending the data to your backend
+        fetch('http://localhost:8000/finances/api/v1/expense-item/', {
+            method: 'POST',
+            body: formDataToSend
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the backend
+            console.log(data);
+            
+        })
+        .catch(error => {
+            // Handle any errors
+            console.error('Error:', error);
+        });
     }
 
     function handleImageChange(event) {
@@ -92,7 +130,7 @@ export default function PayDetails() {
                     label="Expense category"
 
                 >
-                    {categories.map((category, index) => (
+                    {expenseCategories.map((category, index) => (
                         <MenuItem key={index} value={category.title}>{category.title}</MenuItem>
                     ))}
                 </Select>
@@ -139,13 +177,7 @@ export default function PayDetails() {
                     },
                 }}
             />
-            <TextField
-                name="payment_category"
-                label="Payment category"
-                variant="outlined"
-                fullWidth
-                value={formData.payment_category}
-                onChange={handleChange}
+            <FormControl fullWidth variant="outlined"
                 sx={{
                     '& .MuiOutlinedInput-root': {
                         borderRadius: 0,
@@ -157,8 +189,21 @@ export default function PayDetails() {
                     '& .MuiOutlinedInput-input': {
                         height: '1rem',
                     },
-                }}
-            />
+                }}>
+                <InputLabel>Payment category</InputLabel>
+                <Select
+                    name="payment_category"
+                    value={formData.payment_category}
+                    onChange={handleChange}
+                    label="Payment category"
+
+                >
+                    {paymentCategories.map((category, index) => (
+                        <MenuItem key={index} value={category.title}>{category.title}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+            
             <TextField
                 name="description"
                 label="Description"
