@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model, authenticate
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser, FormParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -34,3 +35,8 @@ class LoginView(APIView):
         return Response(serializer.errors, status=400)
 
 
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        return Response(status=status.HTTP_200_OK)

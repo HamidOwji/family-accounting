@@ -6,6 +6,25 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { Box } from '@mui/material';
 
 export default function AppFrame({children}) {
+    function handleLogout() {
+        
+        fetch('http://localhost:8000/accounts/api/v1/logout/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+            // body: JSON.stringify({ token: localStorage.getItem('token') })  
+        })
+        .then(response => {
+            if (response.ok) {
+                // Remove the token from local storage.
+                localStorage.removeItem('token');
+                // Redirect the user or update the app state as needed.
+                window.location.href = "/login";  
+            }
+        });
+    }
     return (
         <Box
             sx={{
@@ -49,7 +68,7 @@ export default function AppFrame({children}) {
                     <Box
 
                     >
-                        <LogoutOutlinedIcon sx={{color:'secondary.main'}}/>
+                        <LogoutOutlinedIcon sx={{color:'secondary.main',  cursor: 'pointer'}} onClick={handleLogout}/>
                     </Box>
                 </Box>
 
