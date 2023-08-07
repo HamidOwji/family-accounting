@@ -27,6 +27,10 @@ export default function Login() {
 
     const handleSubmit = async (event) => {
       event.preventDefault()
+      if (formData.email === '' || formData.password === '') {
+        alert('Email and password are required.');
+        return;
+      }
       const { email, password } = formData
 
           const dataToSend = {
@@ -34,11 +38,13 @@ export default function Login() {
             password: password,
           };
           const response = await postData(dataToSend);
-          // console.log(response);
+          console.log("Response:", response);
+          
           if (response.data && response.data.success) {
+            localStorage.setItem('token', response.data.token);
             navigate('/operations');
           } else {
-            // alert(response.data.message);
+            alert(response.data.message);
           }
     }
 
@@ -110,10 +116,11 @@ export default function Login() {
           onChange={handleChange} 
           />
         <Button
-         variant="contained"
-         color="secondary"
-         onClick={handleSubmit}>
-          Login!
+          variant="contained"
+          color="secondary"
+          onClick={handleSubmit}
+          disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login!'}
         </Button>
       </Box>
     </Box>

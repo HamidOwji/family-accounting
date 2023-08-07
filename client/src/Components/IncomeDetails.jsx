@@ -11,7 +11,11 @@ export default function IncomeDetails() {
 
     // fetch categories from the backend when component mounts
     useEffect(() => {
-        fetch('http://localhost:8000/finances/api/v1/income-category/')
+        const token = localStorage.getItem('token');
+        const headers = {
+            Authorization: `Bearer ${token}`
+        };
+        fetch('http://localhost:8000/finances/api/v1/income-category/', { headers })
             .then(response => response.json())
             .then(data => {
                 setCategories(data);

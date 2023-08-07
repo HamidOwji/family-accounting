@@ -4,3 +4,4 @@ python-decouple
 Pillow
 djangorestframework
 django-cors-headers
+djangorestframework-simplejwt

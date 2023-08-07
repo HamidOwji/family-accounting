@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
-
+import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button, Snackbar } from '@mui/material';
+import Alert from '@mui/material/Alert';
 
 export default function PayDetails() {
 
@@ -15,24 +15,31 @@ export default function PayDetails() {
 
     const [expenseCategories, setExpenseCategories] = useState([]);
     const [paymentCategories, setPaymentCategories] = useState([]);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     // fetch expenseCategories from the backend when component mounts
     useEffect(() => {
-        fetch('http://localhost:8000/finances/api/v1/expense-category/')
+        const token = localStorage.getItem('token');
+        const headers = {
+            Authorization: `Bearer ${token}`
+        };
+        fetch('http://localhost:8000/finances/api/v1/expense-category/', { headers })
             .then(response => response.json())
             .then(data => {
                 setExpenseCategories(data);
             // Check if data has at least one element and that the element has a title
+            // console.log(data);
             if(data[0] && data[0].title) {
                 setFormData(prevFormData => {
                     return {
                         ...prevFormData,
-                        expense_category: data[0].title // Set the first category as the default selected value
+                        expense_category: data[0] && data[0].id ? data[0].id : "", // Set the first category as the default selected value
                     }
                 })
             }
         });
-        fetch('http://localhost:8000/finances/api/v1/payment-category/')
+
+        fetch('http://localhost:8000/finances/api/v1/payment-category/', { headers })
             .then(response => response.json())
             .then(data => {
                 setPaymentCategories(data);
@@ -41,7 +48,7 @@ export default function PayDetails() {
                 setFormData(prevFormData => {
                     return {
                         ...prevFormData,
-                        payment_category: data[0].title // Set the first category as the default selected value
+                        payment_category: data[0] && data[0].id ? data[0].id : "" // Set the first category as the default selected value
                     }
                 })
             }
@@ -71,12 +78,31 @@ export default function PayDetails() {
         // Sending the data to your backend
         fetch('http://localhost:8000/finances/api/v1/expense-item/', {
             method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                
+            },
             body: formDataToSend
         })
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                // Open the Snackbar
+                setOpenSnackbar(true);
+                // Reset the form data
+                setFormData({
+                    expense_category: "",
+                    title: "",
+                    amount: "",
+                    payment_category: "",
+                    description: "",
+                    image: null
+                });
+            }
+            return response.json();
+        })
         .then(data => {
             // Handle the response from the backend
-            console.log(data);
+            // console.log(data);
             
         })
         .catch(error => {
@@ -93,6 +119,14 @@ export default function PayDetails() {
             }
         })
     }
+
+    function handleCloseSnackbar(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
+
     return (
 
         <Box
@@ -131,7 +165,7 @@ export default function PayDetails() {
 
                 >
                     {expenseCategories.map((category, index) => (
-                        <MenuItem key={index} value={category.title}>{category.title}</MenuItem>
+                        <MenuItem key={index} value={category.id}>{category.title}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -199,11 +233,11 @@ export default function PayDetails() {
 
                 >
                     {paymentCategories.map((category, index) => (
-                        <MenuItem key={index} value={category.title}>{category.title}</MenuItem>
+                        <MenuItem key={index} value={category.id}>{category.title}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
-            
+
             <TextField
                 name="description"
                 label="Description"
@@ -269,7 +303,17 @@ export default function PayDetails() {
                 >
                 Save
             </Button>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                    Your item is successfully saved.
+                </Alert>
+            </Snackbar>
         </Box>
+        
 
     )
 }
