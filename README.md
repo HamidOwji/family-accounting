@@ -21,7 +21,7 @@ Docker compose
 
 ## Getting started
 - Clone the repository:  
-`git clone https://github.com/hamidowji/family-accounting.git`
+`git clone https://github.com/HamidOwji/family-accounting.git`
 - Navigate to family accounting:  
 `cd family-accounting`   
 - Build and Run the Containers:
