@@ -21,14 +21,35 @@ Docker compose
 
 ## Getting started
 - Clone the repository:  
-`git clone https://github.com/HamidOwji/family-accounting.git`
+``` 
+git clone https://github.com/HamidOwji/family-accounting.git
+```
 - Navigate to family accounting:  
-`cd family-accounting`   
-- Build and Run the Containers:
-  Before the build process, .env file should be created in core directory beside manage.py and any variable needed to run the project should be introduce in that file.
-  
-`docker-compose build`    
-`docker-compose up`  
+```
+cd family-accounting
+```   
+
+- Before the build process, .env file should be created in core directory beside manage.py and any variable needed to run the project should be introduce in that file. A sample of this file would be as follow:
+```python
+DEBUG=1  
+SECRETE_KEY=a-secrete-key  
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]  
+SQL_ENGINE=django.db.backends.postgresql  
+SQL_DATABASE=postgres  
+SQL_USER=postgres  
+SQL_PASSWORD=a-password-for-sql  
+SQL_HOST=db  
+SQL_POST=5432  
+DATABASE=postgress
+```
+
+- Build and Run the Containers:  
+ ```python
+docker-compose --env-file ./core/.env build
+```    
+ ```python
+ docker-compose --env-file ./core/.env up
+```  
 
 
 
@@ -38,7 +59,9 @@ Visit http://localhost:5173 in your browser to access the application.
 ## Stop the Containers:  
 
 Press Ctrl+C or run the following command in another terminal:  
-`docker-compose down`  
+```
+docker-compose down
+```  
 
 ## Contributing
 We welcome contributions! Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests.
@@ -49,10 +72,11 @@ We welcome contributions! Please read CONTRIBUTING.md for details on our code of
 ## Acknowledgments  
 
 - React
+- Vite  
 - MUI
 - Django
 - Django REST framework
-- Docker
+- Docker  
 
   
 
