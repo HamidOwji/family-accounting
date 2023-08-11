@@ -9,8 +9,12 @@ Family Management: Add and manage family members and set individual permissions.
 Expense Tracking: Keep track of all your family's expenses, including bills, groceries, and personal expenses.  
 Income Tracking: Monitor income from different sources.  
 Budgeting: Set budgeting goals and track progress.  
-Reports and Analysis: Analyze spending habits with easy-to-understand graphs and reports.
+Reports and Analysis: Analyze spending habits with easy-to-understand graphs and reports.  
 
+
+For this project a database schedule is defined as follows:  
+
+![Database schedule](image.png)
 ## Installation and running  
 
 ### Prerequisites  
@@ -32,14 +36,14 @@ cd family-accounting
 - Before the build process, .env file should be created in core directory beside manage.py and any variable needed to run the project should be introduce in that file. A sample of this file would be as follow:
 ```python
 DEBUG=1  
-SECRETE_KEY=a-secrete-key  
+SECRET_KEY=a-secrete-key  
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]  
 SQL_ENGINE=django.db.backends.postgresql  
 SQL_DATABASE=postgres  
 SQL_USER=postgres  
 SQL_PASSWORD=a-password-for-sql  
 SQL_HOST=db  
-SQL_POST=5432  
+SQL_PORT=5432  
 DATABASE=postgress
 ```
 

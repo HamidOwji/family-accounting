@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
-
+import CustomDropdown from './CustomDropdown';
 
 export default function IncomeDetails() {
     const [formData, setFormData] = useState({
@@ -62,32 +62,13 @@ export default function IncomeDetails() {
             }}
         >
 
-            <FormControl fullWidth variant="outlined"
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                        height: '1rem',
-                    },
-                }}>
-                <InputLabel>Income category</InputLabel>
-                <Select
-                    name="income_category"
-                    value={formData.income_category}
-                    onChange={handleChange}
-                    label="Income category"
-
-                >
-                    {categories.map((category, index) => (
-                        <MenuItem key={index} value={category.title}>{category.title}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            <CustomDropdown
+                items={categories}
+                value={formData.income_category}
+                onChange={handleChange}
+                name="income_category"
+                label="Income category"
+            />
 
             <TextField
                 name="amount"

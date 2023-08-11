@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button, Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
+import CustomDropdown from './CustomDropdown';
 
 export default function PayDetails() {
 
@@ -126,7 +127,7 @@ export default function PayDetails() {
         }
         setOpenSnackbar(false);
     };
-
+  
     return (
 
         <Box
@@ -143,32 +144,13 @@ export default function PayDetails() {
             }}
         >
 
-            <FormControl fullWidth variant="outlined"
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                        height: '1rem',
-                    },
-                }}>
-                <InputLabel>Expense category</InputLabel>
-                <Select
-                    name="expense_category"
-                    value={formData.expense_category}
-                    onChange={handleChange}
-                    label="Expense category"
-
-                >
-                    {expenseCategories.map((category, index) => (
-                        <MenuItem key={index} value={category.id}>{category.title}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            <CustomDropdown
+                items={expenseCategories}
+                value={formData.expense_category}
+                onChange={handleChange}
+                name="expense_category"
+                label="Expense category"
+            />
 
             <TextField
                 name="title"
@@ -211,32 +193,13 @@ export default function PayDetails() {
                     },
                 }}
             />
-            <FormControl fullWidth variant="outlined"
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                        height: '1rem',
-                    },
-                }}>
-                <InputLabel>Payment category</InputLabel>
-                <Select
-                    name="payment_category"
-                    value={formData.payment_category}
-                    onChange={handleChange}
-                    label="Payment category"
-
-                >
-                    {paymentCategories.map((category, index) => (
-                        <MenuItem key={index} value={category.id}>{category.title}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            <CustomDropdown
+                items={paymentCategories}
+                value={formData.payment_category}
+                onChange={handleChange}
+                name="payment_category"
+                label="Payment category"
+            />
 
             <TextField
                 name="description"
