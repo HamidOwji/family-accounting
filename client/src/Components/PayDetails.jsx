@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button, Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import CustomDropdown from './CustomDropdown';
+import axios from '../config/axiosConfig';
 
 export default function PayDetails() {
 
@@ -18,43 +19,47 @@ export default function PayDetails() {
     const [paymentCategories, setPaymentCategories] = useState([]);
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
-    // fetch expenseCategories from the backend when component mounts
+    // helper function for axios
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            Authorization: `Bearer ${token}`
-        };
-        fetch('http://localhost:8000/finances/api/v1/expense-category/', { headers })
-            .then(response => response.json())
-            .then(data => {
-                setExpenseCategories(data);
-            // Check if data has at least one element and that the element has a title
-            // console.log(data);
-            if(data[0] && data[0].title) {
-                setFormData(prevFormData => {
-                    return {
-                        ...prevFormData,
-                        expense_category: data[0] && data[0].id ? data[0].id : "", // Set the first category as the default selected value
-                    }
-                })
+        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
+        axios.get('http://localhost:8000/finances/api/v1/expense-category/', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true  // to ensure cookies are sent with the request
+        })
+        .then(response => {
+            setExpenseCategories(response.data);
+            if(response.data[0] && response.data[0].id) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    expense_category: response.data[0].id
+                }));
             }
         });
-
-        fetch('http://localhost:8000/finances/api/v1/payment-category/', { headers })
-            .then(response => response.json())
-            .then(data => {
-                setPaymentCategories(data);
-            // Check if data has at least one element and that the element has a title
-            if(data[0] && data[0].title) {
-                setFormData(prevFormData => {
-                    return {
-                        ...prevFormData,
-                        payment_category: data[0] && data[0].id ? data[0].id : "" // Set the first category as the default selected value
-                    }
-                })
+ 
+        axios.get('http://localhost:8000/finances/api/v1/payment-category/', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true  // to ensure cookies are sent with the request
+        })
+        .then(response => {
+            setPaymentCategories(response.data);
+            if(response.data[0] && response.data[0].id) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    payment_category: response.data[0].id
+                }));
             }
-        });       
-    }, [])
+        }); 
+    }, []);
 
 
     function handleChange(event) {
@@ -127,6 +132,7 @@ export default function PayDetails() {
         }
         setOpenSnackbar(false);
     };
+
   
     return (
 

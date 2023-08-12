@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
 import CustomDropdown from './CustomDropdown';
+import axios from '../config/axiosConfig';
 
 export default function IncomeDetails() {
     const [formData, setFormData] = useState({
@@ -9,27 +10,33 @@ export default function IncomeDetails() {
     })
     const [categories, setCategories] = useState([]);
 
+    // helper function for axios
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
     // fetch categories from the backend when component mounts
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            Authorization: `Bearer ${token}`
-        };
-        fetch('http://localhost:8000/finances/api/v1/income-category/', { headers })
-            .then(response => response.json())
-            .then(data => {
-                setCategories(data);
-                if(data[0] && data[0].title) {
-                    setFormData(prevFormData => {
-                        return {
-                            ...prevFormData,
-                            income_category: data[0].title // Set the first category as the default selected value
-                        }
-                    })
-                }
-            })
+        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
+        axios.get('http://localhost:8000/finances/api/v1/income-category/', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true  // to ensure cookies are sent with the request
+        })
+        .then(response => {
+            setCategories(response.data);
+            if(response.data[0] && response.data[0].id) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    income_category: response.data[0].id
+                }));
+            }
+        });
 
-    }, [])
+    }, []);
+    
 
     function handleChange(event) {
         setFormData(prevFormData => {
@@ -43,9 +50,24 @@ export default function IncomeDetails() {
     }
 
     function handleSubmit(event) {
-        event.preventDefault()
+        event.preventDefault();
         
+        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
+        axios.post('YOUR_BACKEND_ENDPOINT_HERE', formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        })
+        .then(response => {
+            // Handle successful save, maybe notify the user or navigate away
+        })
+        .catch(error => {
+            // Handle errors
+        });
     }
+    
 
     return (
         <Box

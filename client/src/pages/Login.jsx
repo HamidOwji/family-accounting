@@ -26,27 +26,31 @@ export default function Login() {
     }
 
     const handleSubmit = async (event) => {
-      event.preventDefault()
+      event.preventDefault();
+      
       if (formData.email === '' || formData.password === '') {
         alert('Email and password are required.');
         return;
       }
-      const { email, password } = formData
-
-          const dataToSend = {
-            email: email,
-            password: password,
-          };
-          const response = await postData(dataToSend);
-          console.log("Response:", response);
-          
-          if (response.data && response.data.success) {
-            localStorage.setItem('token', response.data.token);
-            navigate('/operations');
-          } else {
-            alert(response.data.message);
-          }
+    
+      const { email, password } = formData;
+    
+      const dataToSend = {
+        email: email,
+        password: password,
+      };
+    
+      const response = await postData(dataToSend);
+      console.log("Response:", response);
+      
+      if (response.data && response.data.success) {
+        navigate('/operations');
+      } else {
+        // Display the error message from the server
+        alert(response.data.error || 'Unknown error');
+      }
     }
+
 
   return (
     <Box

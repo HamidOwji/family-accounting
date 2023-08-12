@@ -24,11 +24,13 @@ const CustomDropdown = ({ items, value, onChange, name, label }) => (
             onChange={onChange}
             label={label}
         >
-            {items.map((item, index) => (
-                <MenuItem key={index} value={item.id}>{item.title}</MenuItem>
+            {items.map((item) => (
+                <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
             ))}
         </Select>
     </FormControl>
 );
 
 export default CustomDropdown;
+
+  

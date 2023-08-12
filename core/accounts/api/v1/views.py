@@ -16,6 +16,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class LoginView(APIView):
     parser_classes = (JSONParser, FormParser)
+
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
@@ -27,7 +28,10 @@ class LoginView(APIView):
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token)
 
-                return Response({"success": True, "token": access_token})
+                response = Response({"success": True})
+                # Set the JWT token as a cookie on the response object
+                response.set_cookie('JWT_COOKIE_FAMILY_ACCOUNTING', access_token, httponly=True, samesite='Lax')
+                return response
             else:
                 return Response({"error": "Invalid email or password"}, status=400)
         else:
@@ -39,4 +43,7 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        return Response(status=status.HTTP_200_OK)
+        response = Response(status=status.HTTP_200_OK)
+        response.delete_cookie('JWT_COOKIE_FAMILY_ACCOUNTING')
+        return response
+

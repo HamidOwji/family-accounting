@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import axios from '../config/axiosConfig';
 import Cookies from 'js-cookie';
 
 const usePostData = (url) => {

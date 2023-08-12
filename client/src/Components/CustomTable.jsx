@@ -6,14 +6,12 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import useFetch from '../hooks/useFetch';
 
 
 export default function CustomTable() {
-    const [rows, setRows] = useState([
-        { id: 1, title: "Title 1" },
-        { id: 2, title: "Title 2" },
-        // ... add more initial data as needed
-    ]);
+    const { data: rows, loading, error } = useFetch('http://localhost:8000/finances/api/v1/expense-category/');
+
 
     const handleAddRow = () => {
         // Logic to add a row (for simplicity, adding a dummy title here)
@@ -37,7 +35,8 @@ export default function CustomTable() {
         );
         setRows(updatedRows);
     };
-
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
     return (
         <div>
             <TableContainer component={Paper}>
