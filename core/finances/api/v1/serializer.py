@@ -50,9 +50,9 @@ class IncomeItemSerializer(serializers.ModelSerializer):
         fields = [
             'id', 
             'user',
-            'title',
+            'income_category',
             'amount',
-            'income_category',]
+            'description',]
         read_only_fields = ('user',)
 
         

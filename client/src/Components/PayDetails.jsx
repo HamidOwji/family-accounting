@@ -75,23 +75,23 @@ export default function PayDetails() {
         event.preventDefault();
         
         const formDataToSend = new FormData();
-    
+        
         // Add all the form data
         for (const key in formData) {
             formDataToSend.append(key, formData[key]);
         }
+        
+        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
     
-        // Sending the data to your backend
-        fetch('http://localhost:8000/finances/api/v1/expense-item/', {
-            method: 'POST',
+        // Sending the data to your backend using axios
+        axios.post('http://localhost:8000/finances/api/v1/expense-item/', formDataToSend, {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-                
+                'Authorization': `Bearer ${token}`,
             },
-            body: formDataToSend
+            withCredentials: true
         })
         .then(response => {
-            if (response.ok) {
+            if (response.status === 200 || response.status === 201) {
                 // Open the Snackbar
                 setOpenSnackbar(true);
                 // Reset the form data
@@ -104,18 +104,13 @@ export default function PayDetails() {
                     image: null
                 });
             }
-            return response.json();
-        })
-        .then(data => {
-            // Handle the response from the backend
-            // console.log(data);
-            
         })
         .catch(error => {
             // Handle any errors
             console.error('Error:', error);
         });
     }
+    
 
     function handleImageChange(event) {
         setFormData(prevFormData => {

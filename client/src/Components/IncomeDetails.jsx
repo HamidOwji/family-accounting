@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
+import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button, Snackbar } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import CustomDropdown from './CustomDropdown';
 import axios from '../config/axiosConfig';
 
@@ -7,8 +8,10 @@ export default function IncomeDetails() {
     const [formData, setFormData] = useState({
         income_category: '',
         amount: '',
+        description: '',
     })
     const [categories, setCategories] = useState([]);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     // helper function for axios
     function getCookie(name) {
@@ -16,6 +19,7 @@ export default function IncomeDetails() {
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
+
     // fetch categories from the backend when component mounts
     useEffect(() => {
         const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
@@ -52,21 +56,30 @@ export default function IncomeDetails() {
     function handleSubmit(event) {
         event.preventDefault();
         
-        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
-        axios.post('YOUR_BACKEND_ENDPOINT_HERE', formData, {
+        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING'); // Fetch JWT token from the cookie
+    
+        axios.post('http://localhost:8000/finances/api/v1/income-item/', formData, { // Replace 'income-endpoint' with your actual endpoint
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`, // Add JWT token to the Authorization header
                 'Content-Type': 'application/json'
             },
             withCredentials: true
         })
         .then(response => {
+            setOpenSnackbar(true);
             // Handle successful save, maybe notify the user or navigate away
         })
         .catch(error => {
             // Handle errors
         });
     }
+
+    function handleCloseSnackbar(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
     
 
     return (
@@ -113,6 +126,29 @@ export default function IncomeDetails() {
                     },
                 }}
             />
+            <TextField
+                name="description"
+                label="Description"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={2}
+                value={formData.description}
+                onChange={handleChange}
+                sx={{
+                    '& .MuiOutlinedInput-root': {
+                        borderRadius: 0,
+                    },
+                    '& .MuiInputLabel-root': {
+                        fontSize: '0.8rem',
+                        fontWeight: 'regular',
+                    },
+                    '& .MuiOutlinedInput-inputMultiline': {
+                        height: '1.rem',
+                    },
+                }}
+            />
+
             <Button
                 variant="contained"
                 color="primary"
@@ -125,6 +161,15 @@ export default function IncomeDetails() {
                 >
                 Save
             </Button>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                    Your item is successfully saved.
+                </Alert>
+            </Snackbar>
         </Box>
     )
 }
