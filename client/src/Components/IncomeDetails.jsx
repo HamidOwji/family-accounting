@@ -5,7 +5,7 @@ import { FormInput } from './FormInput';
 import { SubmitButton } from './SubmitButton';
 import { FormSnackbar } from './FormSnackbar';
 import { useFetchData } from '../hooks/useFetchData';
-import { useSubmitForm } from '../hooks/useSubmitForm'; 
+import useSubmitForm from '../hooks/useSubmitForm'; 
 
 
 export default function IncomeDetails() {

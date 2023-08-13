@@ -25,6 +25,13 @@ export default function AppFrame({children}) {
             }
         });
     }
+
+    function handleRedirectToOperations(){
+        window.location.href = "/operations";
+    }
+    function handleRedirectToCategories(){
+        window.location.href = "/categories";
+    }
     return (
         <Box
             sx={{
@@ -95,10 +102,10 @@ export default function AppFrame({children}) {
                     <Box
 
                     >
-                        <CategoryOutlinedIcon sx={{color:'secondary.main'}}/>
+                        <CategoryOutlinedIcon sx={{color:'secondary.main',  cursor: 'pointer'}} onClick={handleRedirectToCategories} />
                     </Box>
                     <Box>
-                        <EuroOutlinedIcon sx={{color:'secondary.main'}} />
+                        <EuroOutlinedIcon sx={{color:'secondary.main',  cursor: 'pointer'}} onClick={handleRedirectToOperations} />
                     </Box>
                 </Box>
             </Box>
