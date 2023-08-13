@@ -41,7 +41,7 @@ export default function Login() {
       };
     
       const response = await postData(dataToSend);
-      console.log("Response:", response);
+      // console.log("Response:", response);
       
       if (response.data && response.data.success) {
         navigate('/operations');
