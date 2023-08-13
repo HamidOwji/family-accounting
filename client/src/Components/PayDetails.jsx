@@ -1,29 +1,39 @@
 import React, {useState, useEffect} from 'react'
-import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button, Snackbar } from '@mui/material';
-import Alert from '@mui/material/Alert';
+import {  Box } from '@mui/material';
 import CustomDropdown from './CustomDropdown';
-import axios from '../config/axiosConfig';
-import getCookie from '../utils/utils';
 import { FormInput } from './FormInput';
 import { FormImageUpload } from './FormImageUpload';
 import { SubmitButton } from './SubmitButton';
 import { FormSnackbar } from './FormSnackbar';
 import { useFetchData } from '../hooks/useFetchData';
+import useSubmitForm from '../hooks/useSubmitForm';
 
 export default function PayDetails() {
-
-    const [formData, setFormData] = useState({
+    const initialState = {
         expense_category: "",
         title: "",
         amount: "",
         payment_category: "",
         description: "",
         image: null
-    })
+    };
+
+    const submitUrl = 'http://localhost:8000/finances/api/v1/expense-item/';
+
+    const {
+        formData,
+        setFormData,
+        openSnackbar,
+        handleChange,
+        handleImageChange,
+        handleSubmit,
+        handleCloseSnackbar
+    } = useSubmitForm(initialState, submitUrl);
+
 
     const [expenseCategories, setExpenseCategories] = useState([]);
     const [paymentCategories, setPaymentCategories] = useState([]);
-    const [openSnackbar, setOpenSnackbar] = useState(false);
+
 
 
     const [expenseData] = useFetchData('http://localhost:8000/finances/api/v1/expense-category/');
@@ -50,78 +60,6 @@ export default function PayDetails() {
             }
         }
     }, [expenseData, paymentData]);
-    
-    
-     
-    
-    // console.log("expenseData: ", expenseData)
-    // console.log("paymentData: ", paymentData)
-
-    function handleChange(event) {
-        setFormData(prevFormData => {
-            return {
-                ...prevFormData,
-                [event.target.name]: event.target.value
-            }
-        })
-    }
-
-    function handleSubmit(event) {
-        event.preventDefault();
-        
-        const formDataToSend = new FormData();
-        
-        // Add all the form data
-        for (const key in formData) {
-            formDataToSend.append(key, formData[key]);
-        }
-        
-        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
-    
-        // Sending the data to your backend using axios
-        axios.post('http://localhost:8000/finances/api/v1/expense-item/', formDataToSend, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-            withCredentials: true
-        })
-        .then(response => {
-            if (response.status === 200 || response.status === 201) {
-                // Open the Snackbar
-                setOpenSnackbar(true);
-                // Reset the form data
-                setFormData({
-                    expense_category: "",
-                    title: "",
-                    amount: "",
-                    payment_category: "",
-                    description: "",
-                    image: null
-                });
-            }
-        })
-        .catch(error => {
-            // Handle any errors
-            console.error('Error:', error);
-        });
-    }
-    
-
-    function handleImageChange(event) {
-        setFormData(prevFormData => {
-            return {
-                ...prevFormData,
-                image: event.target.files[0]
-            }
-        })
-    }
-
-    function handleCloseSnackbar(event, reason) {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpenSnackbar(false);
-    };
 
   
     return (
@@ -139,10 +77,6 @@ export default function PayDetails() {
                 gap: '1.2rem',
             }}
         >
-            {/* {expenseError && <p>Error loading expense data: {expenseError}</p>}
-            {paymentError && <p>Error loading payment data: {paymentError}</p>}
-            {isLoadingExpense && <p>Loading expense data...</p>}    
-            {isLoadingPayment && <p>Loading payment data...</p>} */}
 
             <CustomDropdown
                 items={expenseCategories}
