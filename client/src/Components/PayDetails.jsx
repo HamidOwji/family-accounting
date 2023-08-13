@@ -3,6 +3,12 @@ import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button, Snac
 import Alert from '@mui/material/Alert';
 import CustomDropdown from './CustomDropdown';
 import axios from '../config/axiosConfig';
+import getCookie from '../utils/utils';
+import { FormInput } from './FormInput';
+import { FormImageUpload } from './FormImageUpload';
+import { SubmitButton } from './SubmitButton';
+import { FormSnackbar } from './FormSnackbar';
+import { useFetchData } from '../hooks/useFetchData';
 
 export default function PayDetails() {
 
@@ -19,48 +25,37 @@ export default function PayDetails() {
     const [paymentCategories, setPaymentCategories] = useState([]);
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
-    // helper function for axios
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
+
+    const [expenseData] = useFetchData('http://localhost:8000/finances/api/v1/expense-category/');
+    const [paymentData] = useFetchData('http://localhost:8000/finances/api/v1/payment-category/');
     
     useEffect(() => {
-        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
-        axios.get('http://localhost:8000/finances/api/v1/expense-category/', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            withCredentials: true  // to ensure cookies are sent with the request
-        })
-        .then(response => {
-            setExpenseCategories(response.data);
-            if(response.data[0] && response.data[0].id) {
+        if (expenseData) {
+            setExpenseCategories(expenseData);  
+            if(expenseData[0] && expenseData[0].id) {
                 setFormData(prevFormData => ({
                     ...prevFormData,
-                    expense_category: response.data[0].id
+                    expense_category: expenseData[0].id
                 }));
             }
-        });
- 
-        axios.get('http://localhost:8000/finances/api/v1/payment-category/', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            withCredentials: true  // to ensure cookies are sent with the request
-        })
-        .then(response => {
-            setPaymentCategories(response.data);
-            if(response.data[0] && response.data[0].id) {
+        }
+    
+        if (paymentData) {
+            setPaymentCategories(paymentData);
+            if(paymentData[0] && paymentData[0].id) {
                 setFormData(prevFormData => ({
                     ...prevFormData,
-                    payment_category: response.data[0].id
+                    payment_category: paymentData[0].id
                 }));
             }
-        }); 
-    }, []);
-
+        }
+    }, [expenseData, paymentData]);
+    
+    
+     
+    
+    // console.log("expenseData: ", expenseData)
+    // console.log("paymentData: ", paymentData)
 
     function handleChange(event) {
         setFormData(prevFormData => {
@@ -144,6 +139,10 @@ export default function PayDetails() {
                 gap: '1.2rem',
             }}
         >
+            {/* {expenseError && <p>Error loading expense data: {expenseError}</p>}
+            {paymentError && <p>Error loading payment data: {paymentError}</p>}
+            {isLoadingExpense && <p>Loading expense data...</p>}    
+            {isLoadingPayment && <p>Loading payment data...</p>} */}
 
             <CustomDropdown
                 items={expenseCategories}
@@ -152,48 +151,19 @@ export default function PayDetails() {
                 name="expense_category"
                 label="Expense category"
             />
+            <FormInput name="title"
+             label="Title"
+             variant="Outlined"
+             multiline
+             value={formData.title}
+             onChange={handleChange} />
 
-            <TextField
-                name="title"
-                label="Title"
-                variant="outlined"
-                fullWidth
-                value={formData.title}
-                onChange={handleChange}
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                        height: '1rem',
-                    },
-                }}
-            />
-            <TextField
-                name="amount"
-                label="Amount"
-                variant="outlined"
-                fullWidth
-                type="number"
-                value={formData.amount}
-                onChange={handleChange}
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                        height: '1rem',
-                    },
-                }}
-            />
+            <FormInput name="amount"
+             label="Amount"
+             variant="Outlined"
+             value={formData.amount}
+             onChange={handleChange} />
+
             <CustomDropdown
                 items={paymentCategories}
                 value={formData.payment_category}
@@ -202,80 +172,17 @@ export default function PayDetails() {
                 label="Payment category"
             />
 
-            <TextField
-                name="description"
-                label="Description"
-                variant="outlined"
-                fullWidth
-                multiline
-                rows={2}
-                value={formData.description}
-                onChange={handleChange}
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-inputMultiline': {
-                        height: '1.rem',
-                    },
-                }}
-            />
+            <FormInput name="description"
+             label="Description"
+             variant="Outlined"
+             multiline
+             value={formData.description}
+             onChange={handleChange} />
 
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '1rem'
-                }}
-            >
-                <InputLabel htmlFor="upload-photo">Upload Image</InputLabel>
-                <Box
-                    component="span"
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '1rem'
-                    }}
-                >
-                    <input
-                        id="upload-photo"
-                        name="image"
-                        type="file"
-                        onChange={handleImageChange}
-                        sx={{
-                            display: 'none',
-                            mb: '1rem',
-                        }}
-                    />
-                    {formData.image && <span>{formData.image.name}</span>}
-                </Box>
-            </Box>
-            <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                sx={{
-                    width: '100%',
-                    mt: '1rem',
-                    mb: '1rem',
-                }}
-                >
-                Save
-            </Button>
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={6000}
-                onClose={handleCloseSnackbar}
-            >
-                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                    Your item is successfully saved.
-                </Alert>
-            </Snackbar>
+            <FormImageUpload onChange={handleImageChange}
+             value={formData.image} />
+            <SubmitButton />
+            <FormSnackbar open={openSnackbar}  onClose={handleCloseSnackbar}/>
         </Box>
         
 

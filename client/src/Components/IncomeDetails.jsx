@@ -3,6 +3,11 @@ import { TextField, Box, MenuItem, Select, InputLabel, FormControl, Button, Snac
 import Alert from '@mui/material/Alert';
 import CustomDropdown from './CustomDropdown';
 import axios from '../config/axiosConfig';
+import getCookie from '../utils/utils';
+import { FormInput } from './FormInput';
+import { SubmitButton } from './SubmitButton';
+import { FormSnackbar } from './FormSnackbar';
+import { useFetchData } from '../hooks/useFetchData';
 
 export default function IncomeDetails() {
     const [formData, setFormData] = useState({
@@ -10,36 +15,24 @@ export default function IncomeDetails() {
         amount: '',
         description: '',
     })
-    const [categories, setCategories] = useState([]);
+    const [incomeCategories, setIncomeCategories] = useState([]);
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
-    // helper function for axios
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
+    const [incomeData] = useFetchData('http://localhost:8000/finances/api/v1/income-category/');
 
-    // fetch categories from the backend when component mounts
+    
     useEffect(() => {
-        const token = getCookie('JWT_COOKIE_FAMILY_ACCOUNTING');
-        axios.get('http://localhost:8000/finances/api/v1/income-category/', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            withCredentials: true  // to ensure cookies are sent with the request
-        })
-        .then(response => {
-            setCategories(response.data);
-            if(response.data[0] && response.data[0].id) {
+        if (incomeData) {
+            setIncomeCategories(incomeData);  
+            if(incomeData[0] && incomeData[0].id) {
                 setFormData(prevFormData => ({
                     ...prevFormData,
-                    income_category: response.data[0].id
+                    income_category: incomeData[0].id
                 }));
             }
-        });
-
-    }, []);
+        }
+    
+    }, [incomeData]);
     
 
     function handleChange(event) {
@@ -98,78 +91,27 @@ export default function IncomeDetails() {
         >
 
             <CustomDropdown
-                items={categories}
+                items={incomeCategories}
                 value={formData.income_category}
                 onChange={handleChange}
                 name="income_category"
                 label="Income category"
             />
 
-            <TextField
-                name="amount"
-                label="Amount"
-                variant="outlined"
-                fullWidth
-                type="number"
-                value={formData.amount}
-                onChange={handleChange}
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                        height: '1rem',
-                    },
-                }}
-            />
-            <TextField
-                name="description"
-                label="Description"
-                variant="outlined"
-                fullWidth
-                multiline
-                rows={2}
-                value={formData.description}
-                onChange={handleChange}
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-inputMultiline': {
-                        height: '1.rem',
-                    },
-                }}
-            />
+            <FormInput name="amount"
+             label="Amount"
+             variant="Outlined"
+             value={formData.amount}
+             onChange={handleChange} />
+            <FormInput name="description"
+             label="Description"
+             variant="Outlined"
+             multiline
+             value={formData.description}
+             onChange={handleChange} />
 
-            <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                sx={{
-                    width: '100%',
-                    mt: '1rem',
-                    mb: '1rem',
-                }}
-                >
-                Save
-            </Button>
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={6000}
-                onClose={handleCloseSnackbar}
-            >
-                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                    Your item is successfully saved.
-                </Alert>
-            </Snackbar>
+            <SubmitButton />
+            <FormSnackbar open={openSnackbar}  onClose={handleCloseSnackbar} />
         </Box>
     )
 }
