@@ -1,38 +1,31 @@
+// useFetch.js
 import { useState, useEffect } from 'react';
-import axios from '../config/axiosConfig';
-import Cookies from 'js-cookie';
 
 function useFetch(url) {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const csrftoken = Cookies.get('csrftoken');
-            const jwtToken = Cookies.get('JWT_COOKIE_NAME');
-
-            try {
-                const response = await axios.get(url, {
-                    headers: {
-                        'X-CSRFToken': csrftoken,
-                        'Authorization': `Bearer ${jwtToken}`
-                    }
-                });
-                setData(response.data);
-                setLoading(false);
-            } catch (err) {
-                setError(err.message);
-                setLoading(false);
+    const fetchData = async () => {
+        try {
+            const response = await fetch(url, { credentials: 'include' });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
             }
-        };
+            const data = await response.json();
+            setData(data);
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, [url]);
 
-    return { data, loading, error };
+    return { data, loading, error, refetch: fetchData };
 }
 
 export default useFetch;
-
-
