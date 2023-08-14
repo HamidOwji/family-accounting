@@ -8,44 +8,55 @@ from .serializer import (ExpenseCategorySerializer,
                         IncomeItemSerializer)
 
 
-class ExpenseCategoryViewSet(viewsets.ModelViewSet):
-    queryset = ExpenseCategory.objects.all()
-    serializer_class = ExpenseCategorySerializer
-    permission_classes = [IsAuthenticated] 
 
+class ExpenseCategoryViewSet(viewsets.ModelViewSet):
+    serializer_class = ExpenseCategorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return ExpenseCategory.objects.filter(user=self.request.user)
+    
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
     
 class PaymentCategoryViewSet(viewsets.ModelViewSet):
-    queryset = PaymentCategory.objects.all()
     serializer_class = PaymentCategorySerializer
     permission_classes = [IsAuthenticated] 
 
+    def get_queryset(self):
+        return PaymentCategory.objects.filter(user=self.request.user)
+    
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 class ExpenseItemViewSet(viewsets.ModelViewSet):
-    queryset = ExpenseItem.objects.all()
     serializer_class = ExpenseItemSerializer
     permission_classes = [IsAuthenticated] 
 
+    def get_queryset(self):
+        return ExpenseItem.objects.filter(user=self.request.user)
+    
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
 class IncomeCategoryViewSet(viewsets.ModelViewSet):
-    queryset = IncomeCategory.objects.all()
     serializer_class = IncomeCategorySerializer
     permission_classes = [IsAuthenticated] 
 
+    def get_queryset(self):
+        return IncomeCategory.objects.filter(user=self.request.user)
+    
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 class IncomeItemViewSet(viewsets.ModelViewSet):
-    queryset = IncomeItem.objects.all()
     serializer_class = IncomeItemSerializer
     permission_classes = [IsAuthenticated] 
 
+    def get_queryset(self):
+        return IncomeItem.objects.filter(user=self.request.user)
+    
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
