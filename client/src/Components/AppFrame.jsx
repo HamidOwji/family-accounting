@@ -1,12 +1,16 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import EuroOutlinedIcon from '@mui/icons-material/EuroOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { Box } from '@mui/material';
 import { styles } from '../styles/appFrame.styles'
+import { Link } from 'react-router-dom'
 
 export default function AppFrame({ children }) {
+    const navigate = useNavigate();
+    
     function handleLogout() {
 
         fetch('http://localhost:8000/accounts/api/v1/logout/', {
@@ -21,17 +25,11 @@ export default function AppFrame({ children }) {
                 if (response.ok) {
                     // Remove the token from local storage.
                     localStorage.removeItem('token');
-                    // Redirect the user or update the app state as needed.
-                    window.location.href = "/login";
+                    navigate.push("/login");
                 }
             });
     }
-    function handleRedirectToOperations() {
-        window.location.href = "/operations";
-    }
-    function handleRedirectToCategories() {
-        window.location.href = "/categories";
-    }
+
     return (
         <Box sx={styles.mainBox } >
             <Box sx={ styles.secondBox } >
@@ -46,10 +44,14 @@ export default function AppFrame({ children }) {
                         <BarChartOutlinedIcon sx={ styles.icon } />
                     </Box>
                     <Box>
-                        <CategoryOutlinedIcon sx={ styles.icon } onClick={handleRedirectToCategories} />
+                        <Link to='/categories'>
+                            <CategoryOutlinedIcon sx={ styles.icon } />
+                        </Link>
                     </Box>
                     <Box>
-                        <EuroOutlinedIcon sx={ styles.icon } onClick={handleRedirectToOperations} />
+                        <Link to='/operations'>
+                            <EuroOutlinedIcon sx={ styles.icon } />
+                        </Link>
                     </Box>
                 </Box>
             </Box>
