@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import usePostData from '../hooks/usePostData';
-
+import usePostData from '../../hooks/usePostData';
+import * as styles from './Login.styles';
 
 export default function Login() {
 
@@ -53,33 +53,8 @@ export default function Login() {
 
 
   return (
-    <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh',
-      bgcolor: 'background.default',
-      pt: '1rem',
-      pb: '1rem',
-    }}
-  >
-    <Box
-    sx={{
-      border: '2px solid', 
-      borderColor: 'secondary.main', 
-      borderRadius: '1.5rem', 
-      width: '18rem', 
-      height: '28rem', 
-      display: 'flex',
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      bgcolor: 'background.white',
-      p: '1rem',  
-    }}
-    >
+    <Box sx={styles.mainBoxStyles}>
+     <Box sx={styles.innerBoxStyles}>
       <Typography variant="h3" 
         sx={{
           color: 'text.primary',
