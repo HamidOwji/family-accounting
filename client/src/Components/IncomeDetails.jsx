@@ -4,7 +4,7 @@ import CustomDropdown from './CustomDropdown';
 import { FormInput } from './FormInput';
 import { SubmitButton } from './SubmitButton';
 import { FormSnackbar } from './FormSnackbar';
-import { useFetchData } from '../hooks/useFetchData';
+import useFetch from '../hooks/useFetch';
 import useSubmitForm from '../hooks/useSubmitForm'; 
 
 
@@ -28,8 +28,8 @@ export default function IncomeDetails() {
     
     const [incomeCategories, setIncomeCategories] = useState([]);
 
-    const [incomeData] = useFetchData('http://localhost:8000/finances/api/v1/income-category/');
-
+    const incomeDataResponse = useFetch('http://localhost:8000/finances/api/v1/income-category/');
+    const incomeData = incomeDataResponse.data
     
     useEffect(() => {
         if (incomeData) {

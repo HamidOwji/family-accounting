@@ -5,7 +5,7 @@ import { FormInput } from './FormInput';
 import { FormImageUpload } from './FormImageUpload';
 import { SubmitButton } from './SubmitButton';
 import { FormSnackbar } from './FormSnackbar';
-import { useFetchData } from '../hooks/useFetchData';
+import useFetch from '../hooks/useFetch';
 import useSubmitForm from '../hooks/useSubmitForm';
 
 export default function PayDetails() {
@@ -36,9 +36,13 @@ export default function PayDetails() {
 
 
 
-    const [expenseData] = useFetchData('http://localhost:8000/finances/api/v1/expense-category/');
-    const [paymentData] = useFetchData('http://localhost:8000/finances/api/v1/payment-category/');
+    const expenseDataResponse = useFetch('http://localhost:8000/finances/api/v1/expense-category/');
+    const paymentDataResponse = useFetch('http://localhost:8000/finances/api/v1/payment-category/');
     
+    const expenseData = expenseDataResponse.data;
+    const paymentData = paymentDataResponse.data;
+    
+
     useEffect(() => {
         if (expenseData) {
             setExpenseCategories(expenseData);  
@@ -61,6 +65,13 @@ export default function PayDetails() {
         }
     }, [expenseData, paymentData]);
 
+    if (expenseDataResponse.loading || paymentDataResponse.loading) {
+        return <div>Loading...</div>;
+    }
+    
+    if (expenseDataResponse.error || paymentDataResponse.error) {
+        return <div>Error occurred!</div>;
+    }
   
     return (
 
