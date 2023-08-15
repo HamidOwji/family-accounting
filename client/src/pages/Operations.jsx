@@ -3,6 +3,7 @@ import { Button,  MenuItem, Select, InputLabel, FormControl } from '@mui/materia
 import AppFrame from "../Components/AppFrame";
 import PayDetails from "../Components/PayDetails";
 import IncomeDetails from "../Components/IncomeDetails";
+import { styles } from '../styles/operation.styles'
 
 export default function Operations() {
 
@@ -15,19 +16,7 @@ export default function Operations() {
     return (
         <AppFrame>
             <FormControl fullWidth variant="outlined"
-                sx={{
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 0,
-                    },
-                    '& .MuiInputLabel-root': {
-                        fontSize: '0.8rem',
-                        fontWeight: 'regular',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                        height: '1rem',
-                    },
-                    width: '60%',
-                }}>
+                sx={styles.formStyle}>
                 <InputLabel>Financial Detail</InputLabel>
                 <Select
                     value={financialDetail}
