@@ -3,66 +3,24 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom'
+import { styles } from '../styles/home.styles'
 
 const HomePage = () => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        bgcolor: 'background.default',
-        pt: '1rem',
-        pb: '1rem',
-      }}
-    >
-      <Typography variant="h3" 
-        sx={{
-          color: 'text.primary',
-          fontSize: '2rem',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          mb: 2,
-          pr: 3,
-          pl: 3,
-        }}
-      >
+    <Box sx={styles.mainBox}>
+      <Typography variant="h3" sx={styles.heading} >
         Family accounting
       </Typography>
-      <Typography variant="h5" 
-        sx={{
-          color: 'secondary.main',
-          fontSize: '1.5rem',
-          textAlign: 'center',
-          mb: 2,
-          pr: 3,
-          pl: 3,
-        }}
-      >
+      <Typography variant="h5" sx={styles.subHeading} >
         spend your money as smart as possible!
       </Typography>
       <Box
         component="img"
         src='/assets/homepage-figure.png'
         alt="App Photo"
-        sx={{
-          width: '200px',
-          height: 'auto',
-          mb: 2,
-          filter: 'opacity(50%)',
-        }}
+        sx={styles.img}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-around',
-          width: '10rem',
-          gap: '1rem',
-        }}
-      >
+      <Box sx={styles.buttonBox} >
         <Button variant="contained" color="secondary" component={Link} to="/sign-up">
           Sign up!
         </Button>
