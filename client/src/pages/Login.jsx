@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import usePostData from '../../hooks/usePostData';
-import * as styles from './Login.styles';
+import usePostData from '../hooks/usePostData';
+import {styles} from '../styles/auth.styles';
 
 export default function Login() {
 
@@ -53,33 +53,17 @@ export default function Login() {
 
 
   return (
-    <Box sx={styles.mainBoxStyles}>
-     <Box sx={styles.innerBoxStyles}>
-      <Typography variant="h3" 
-        sx={{
-          color: 'text.primary',
-          fontSize: '2rem',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          mb: 2,
-          pr: 3,
-          pl: 3,
-        }}
-      >
+    <Box sx={styles.mainBox}>
+     <Box sx={styles.innerBox}>
+      <Typography variant="h3" sx={styles.heading}>
         Login!
       </Typography>
       <Box
-        component="form"
-        sx={{
-          display: 'flex',  
-          flexDirection: 'column',  
-          alignItems: 'center',  
-          justifyContent: 'center',
-          '& > :not(style)': { m: 1, width: '12rem' },
-        }}
-        noValidate
-        autoComplete="off"
-      >
+            component="form"
+            sx={styles.form}
+            noValidate
+            autoComplete="off"
+        >
         <TextField
           label="Email"
           variant="outlined"
