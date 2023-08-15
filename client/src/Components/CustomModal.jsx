@@ -1,9 +1,11 @@
 import React from "react";
 import { Modal, TextField, Button, useTheme } from "@mui/material";
+import getStyles from '../styles/modal'
 
 export default function CustomModal({ open, onClose, titleValue, setTitle, currentRowId, isEditing, setIsEditing, category, refetch }) {
     const theme = useTheme();
-
+    const styles = getStyles(theme)
+    
     async function handleAddOrUpdateRow() {
         const url = isEditing
             ? `http://localhost:8000/finances/api/v1/${category}/${currentRowId}/`
@@ -38,20 +40,7 @@ export default function CustomModal({ open, onClose, titleValue, setTitle, curre
             aria-labelledby="add-new-item"
             aria-describedby="modal-to-add-new-item"
         >
-            <div style={{
-                top: `50%`,
-                left: `50%`,
-                transform: `translate(-50%, -50%)`,
-                position: 'absolute',
-                width: '50%',
-                backgroundColor: theme.palette.background.white,
-                border: theme.palette.primary.main,
-                boxShadow: 24,
-                padding: 15,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}>
+            <div style={styles.mainDiv}>
                 <h2>{isEditing ? 'Edit Item' : `Add New Item to ${category}`}</h2>
                 <TextField 
                     label="Title"

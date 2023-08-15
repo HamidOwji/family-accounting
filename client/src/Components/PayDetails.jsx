@@ -7,6 +7,7 @@ import { SubmitButton } from './SubmitButton';
 import { FormSnackbar } from './FormSnackbar';
 import useFetch from '../hooks/useFetch';
 import useSubmitForm from '../hooks/useSubmitForm';
+import { styles } from '../styles/incomeAndPayDetails.styles'
 
 export default function PayDetails() {
     const initialState = {
@@ -78,15 +79,7 @@ export default function PayDetails() {
         <Box
             component="form"
             onSubmit={handleSubmit}
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '60%',
-                mt: 3,
-                gap: '1.2rem',
-            }}
+            sx={styles.mainBox}
         >
 
             <CustomDropdown

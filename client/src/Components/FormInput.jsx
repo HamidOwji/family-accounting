@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+import { styles } from '../styles/formImage.styles';
 
 export function FormInput(props) {
     const { name, label, onChange, value, multiline } = props;
@@ -14,18 +15,7 @@ export function FormInput(props) {
             onChange={onChange}
             multiline={multiline}
             rows={multiline ? 2 : 1}
-            sx={{
-                '& .MuiOutlinedInput-root': {
-                    borderRadius: 0,
-                },
-                '& .MuiInputLabel-root': {
-                    fontSize: '0.8rem',
-                    fontWeight: 'regular',
-                },
-                '& .MuiOutlinedInput-input': {
-                    height: '1rem',
-                },
-            }}
+            sx={styles.TextField}
         />
     );
 }

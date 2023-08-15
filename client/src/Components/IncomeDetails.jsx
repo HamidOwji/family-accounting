@@ -6,7 +6,7 @@ import { SubmitButton } from './SubmitButton';
 import { FormSnackbar } from './FormSnackbar';
 import useFetch from '../hooks/useFetch';
 import useSubmitForm from '../hooks/useSubmitForm'; 
-
+import { styles } from '../styles/incomeAndPayDetails.styles'
 
 export default function IncomeDetails() {
     const initialState = {
@@ -48,17 +48,8 @@ export default function IncomeDetails() {
         <Box
             component="form"
             onSubmit={handleSubmit}
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '60%',
-                mt: 3,
-                gap: '1.2rem',
-            }}
+            sx={styles.mainBox}
         >
-
             <CustomDropdown
                 items={incomeCategories}
                 value={formData.income_category}
