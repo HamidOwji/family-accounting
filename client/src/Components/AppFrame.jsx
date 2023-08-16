@@ -25,7 +25,7 @@ export default function AppFrame({ children }) {
                 if (response.ok) {
                     // Remove the token from local storage.
                     localStorage.removeItem('token');
-                    navigate.push("/login");
+                    navigate("/login");
                 }
             });
     }
