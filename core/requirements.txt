@@ -5,3 +5,4 @@ Pillow
 djangorestframework
 django-cors-headers
 djangorestframework-simplejwt
+django-mail-templated
