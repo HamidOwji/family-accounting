@@ -75,6 +75,7 @@ We welcome contributions! Please read CONTRIBUTING.md for details on our code of
 
 ## Acknowledgments  
 
+- dbdiagram.io
 - React
 - Vite  
 - MUI

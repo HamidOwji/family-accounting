@@ -1,1 +1,1 @@
-from .user_signals import *
+from . import user_signals
