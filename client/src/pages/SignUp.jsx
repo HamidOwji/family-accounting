@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import usePostData from '../hooks/usePostData';
 import { styles } from '../styles/auth.styles';
 import FormManager from '../hoc/FormManager';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
 
@@ -14,6 +15,8 @@ export default function SignUp() {
   const [emailErrors, setEmailErrors] = React.useState('')
   const [passwordErrors, setPasswordErrors] = React.useState('')
 
+  const navigate = useNavigate()
+  
   const handleSubmit = async (formData) => {
     
     const { email, password, repeatPassword } = formData
@@ -29,8 +32,15 @@ export default function SignUp() {
           password: password,
           password2: repeatPassword,
         };
-        await postData(dataToSend);
+        const response = await postData(dataToSend);
 
+        if (response.status === 201) {
+          navigate('/login');
+        } else {
+          // Display the error message from the server
+          alert(response.data.error || 'Unknown error');
+          console.log('Server response:', response);
+        }
       } else {
         setEmailErrors('Please insert email in correct format')
         return
