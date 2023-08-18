@@ -145,7 +145,12 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         'core.authentication.CookieJWTAuthentication',
-    ]
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+    ],
+
 }
 
 SIMPLE_JWT = {

@@ -16,8 +16,8 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet)
 
 urlpatterns = [
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('login/', LoginView.as_view(), name='api_login'),
+    path('logout/', LogoutView.as_view(), name='api_logout'),
     path('', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('register/', RegistrationApiView.as_view(), name='register'),
