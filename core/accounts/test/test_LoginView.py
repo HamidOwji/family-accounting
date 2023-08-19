@@ -3,10 +3,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from ..api.v1.views import LoginView
 from ..api.v1.serializers import UserSerializer 
 from django.contrib.auth import get_user_model
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
 from django.urls import reverse
-
 
 User = get_user_model()
 
@@ -98,3 +97,41 @@ class LogoutViewTestCase(BaseTestCase):
             self.assertEqual(jwt_cookie.value, "")
         else:
             self.fail("JWT_COOKIE_FAMILY_ACCOUNTING cookie is missing from the response.")
+
+
+
+# class RegistrationApiViewTestCase(APITestCase):
+
+#     def test_registration_valid(self):
+#         data = {
+#             "email": "test_register@example.com",
+#             "password": "testpassword",
+#             "password2": "testpassword"
+#         }
+#         response = self.client.post(reverse('accounts:register'), data, format='json')
+#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+#         self.assertEqual(response.data['email'], data['email'])
+
+#         # Check that the user is created but not active
+#         user = User.objects.get(email=data['email'])
+#         email_content = mail.outbox[0].body
+#         print(email_content)
+#         self.assertIn('token', email_content)
+#         self.assertFalse(user.is_active)
+
+#         # Check that one message has been sent.
+#         self.assertEqual(len(mail.outbox), 1)
+
+#         # Check the token in the email context (you might want to extract the token from the email and verify it if needed)
+#         email_content = mail.outbox[0].body
+#         self.assertIn('token', email_content)  # This is a simple check, you can expand on this
+#     def test_registration_invalid(self):
+#         data = {
+#             "email": "test_register@example.com",
+#             "password": "testpassword",
+#             "password2": "wrong-password"
+#         }
+#         response = self.client.post(reverse('accounts:register'), data, format='json')
+#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+

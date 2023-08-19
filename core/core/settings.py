@@ -60,7 +60,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR),'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -166,7 +166,12 @@ CORS_ALLOWED_ORIGINS = [
 
 
 # For development:
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# if DEBUG:
+#     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# else:
+#     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 # For production (use your own SMTP server credentials):
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

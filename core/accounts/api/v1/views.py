@@ -12,7 +12,7 @@ from mail_templated import EmailMessage
 from ..utils import EmailThread
 import jwt
 from django.conf import settings
-from .serializers import RegistrationSerializer
+from .serializers import UserSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -69,7 +69,7 @@ class LogoutView(APIView):
 
 
 class RegistrationApiView(generics.GenericAPIView):
-    serializer_class = RegistrationSerializer
+    serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -83,9 +83,14 @@ class RegistrationApiView(generics.GenericAPIView):
                 from_email="admin@admin.com",
                 to=[user.email]
             )
-            EmailThread(email_obj).start()
+            try:
+                EmailThread(email_obj).start()
+            except Exception as e:
+                return Response({"error": "Error sending activation email"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
             return Response({"email": user.email}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_tokens_for_user(self, user):
         refresh = RefreshToken.for_user(user)

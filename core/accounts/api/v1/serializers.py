@@ -5,6 +5,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from ...models.profiles import Profile
 
 User = get_user_model()
+
+
 class UserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
@@ -30,23 +32,6 @@ class UserSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-
-
-
-class RegistrationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email']
-        )
-        user.set_password(validated_data['password'])
-        user.is_active = False  # Set to False until the user activates via email
-        user.save()
-        return user
 
 
 
