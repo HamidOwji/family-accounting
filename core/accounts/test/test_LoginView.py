@@ -6,6 +6,9 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
 from django.urls import reverse
+from django.core import mail
+from rest_framework import status
+
 
 User = get_user_model()
 
@@ -99,39 +102,43 @@ class LogoutViewTestCase(BaseTestCase):
             self.fail("JWT_COOKIE_FAMILY_ACCOUNTING cookie is missing from the response.")
 
 
+User = get_user_model()
 
-# class RegistrationApiViewTestCase(APITestCase):
+class UserRegistrationTestCase(APITestCase):
 
-#     def test_registration_valid(self):
-#         data = {
-#             "email": "test_register@example.com",
-#             "password": "testpassword",
-#             "password2": "testpassword"
-#         }
-#         response = self.client.post(reverse('accounts:register'), data, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-#         self.assertEqual(response.data['email'], data['email'])
+    def setUp(self):
+        # Clear the outbox before each test
+        mail.outbox = []
 
-#         # Check that the user is created but not active
-#         user = User.objects.get(email=data['email'])
-#         email_content = mail.outbox[0].body
-#         print(email_content)
-#         self.assertIn('token', email_content)
-#         self.assertFalse(user.is_active)
+    def test_valid_registration(self):
+        """
+        Ensure we can create a new user with valid data.
+        """
+        url = reverse('accounts:register')  # Replace with the actual name of your endpoint
+        data = {
+            'email': 'testuser@example.com',
+            'password': 'testpass123',
+            'password2': 'testpass123',
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(User.objects.get().email, 'testuser@example.com')
 
-#         # Check that one message has been sent.
-#         self.assertEqual(len(mail.outbox), 1)
+    def test_email_sent_after_registration(self):
+        """
+        Ensure an email is sent after successful registration.
+        """
+        url = reverse('accounts:register')  # Replace with the actual name of your endpoint
+        data = {
+            'email': 'testuser@example.com',
+            'password': 'testpass123',
+            'password2': 'testpass123',
+        }
+        self.client.post(url, data, format='json')
 
-#         # Check the token in the email context (you might want to extract the token from the email and verify it if needed)
-#         email_content = mail.outbox[0].body
-#         self.assertIn('token', email_content)  # This is a simple check, you can expand on this
-#     def test_registration_invalid(self):
-#         data = {
-#             "email": "test_register@example.com",
-#             "password": "testpassword",
-#             "password2": "wrong-password"
-#         }
-#         response = self.client.post(reverse('accounts:register'), data, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Check that one message was sent
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Activate your account')  # Assuming this is the subject of your activation email
 
-
+ 

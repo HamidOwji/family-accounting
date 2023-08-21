@@ -27,6 +27,7 @@ from django.shortcuts import get_object_or_404
 from ...models.profiles import Profile
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
+from django.template.loader import render_to_string
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
@@ -68,6 +69,7 @@ class LogoutView(APIView):
     
 
 
+
 class RegistrationApiView(generics.GenericAPIView):
     serializer_class = UserSerializer
 
@@ -77,16 +79,18 @@ class RegistrationApiView(generics.GenericAPIView):
             user = serializer.save()
             token = self.get_tokens_for_user(user)
             email_context = {"token": token}
-            email_obj = EmailMessage(
-                template_name="email/activation_email.tpl",
-                context=email_context,
-                from_email="admin@admin.com",
-                to=[user.email]
-            )
+
+            message = render_to_string('email/activation_email.tpl', email_context)
             try:
-                EmailThread(email_obj).start()
+                send_mail(
+                    'Activate your account',
+                    message,
+                    'admin@admin.com',
+                    [user.email],
+                    fail_silently=False,
+                )
             except Exception as e:
-                return Response({"error": "Error sending activation email"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({"error": f"Error sending activation email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             return Response({"email": user.email}, status=status.HTTP_201_CREATED)
         else:
