@@ -180,7 +180,7 @@ class AccountActivationEndToEndTestCase(APITestCase):
         # Step 3: Activate the user using the JWT token
         activation_url = reverse('accounts:activate', args=[token])
         activation_response = self.client.get(activation_url)
-        
+
         # print('content: ', activation_response.content)
         self.assertEqual(activation_response.status_code, status.HTTP_200_OK)
 
@@ -188,3 +188,26 @@ class AccountActivationEndToEndTestCase(APITestCase):
         # Step 4: Verify that the user is now active
         user = get_user_model().objects.get(email='testuser@example.com')
         self.assertTrue(user.is_active)
+
+
+class ProfileApiViewTestCase(BaseTestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        print('user:', self.user)
+
+    def test_profile_retrieval(self):
+        url = reverse('accounts:profile')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['user'], self.user.id)
+
+    def test_profile_update(self):
+        url = reverse('accounts:profile')
+        data = {'first_name': 'John', 'last_name': 'Doe'}
+        response = self.client.put(url, data, format='json')
+        print('response: ', response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['first_name'], 'John')
+        self.assertEqual(response.data['last_name'], 'Doe')

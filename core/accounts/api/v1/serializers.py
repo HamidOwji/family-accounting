@@ -53,6 +53,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Profile
         fields = ('id', 'user', 'first_name', 'last_name')
