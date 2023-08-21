@@ -29,8 +29,11 @@ from django.core.mail import send_mail
 from datetime import datetime, timedelta
 from django.template.loader import render_to_string
 
+
+User = get_user_model()
+
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = get_user_model().objects.all()
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
 

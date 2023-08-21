@@ -165,21 +165,18 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-# For development:
-# if DEBUG:
-#     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# else:
-#     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
-# For production (use your own SMTP server credentials):
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'your-smtp-server.com'
+# EMAIL_HOST = 'your-smtp-server.com' # e.g., 'smtp.gmail.com' for Gmail
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'your-email@example.com'
 # EMAIL_HOST_PASSWORD = 'your-email-password'
+
+
 
 
 

@@ -8,6 +8,9 @@ from rest_framework import status
 from django.urls import reverse
 from django.core import mail
 from rest_framework import status
+from datetime import datetime, timedelta
+import jwt
+from django.conf import settings
 
 
 User = get_user_model()
@@ -102,7 +105,6 @@ class LogoutViewTestCase(BaseTestCase):
             self.fail("JWT_COOKIE_FAMILY_ACCOUNTING cookie is missing from the response.")
 
 
-User = get_user_model()
 
 class UserRegistrationTestCase(APITestCase):
 
@@ -141,4 +143,48 @@ class UserRegistrationTestCase(APITestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Activate your account')  # Assuming this is the subject of your activation email
 
- 
+
+class AccountActivationEndToEndTestCase(APITestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        mail.outbox = []  # clear the outbox
+
+    def test_registration_and_activation(self):
+        # Step 1: Register a new user
+        url = reverse('accounts:register')
+        data = {
+            'email': 'testuser@example.com',
+            'password': 'testpass123',
+            'password2': 'testpass123',
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        user = get_user_model().objects.get(email='testuser@example.com')
+        self.assertFalse(user.is_active)
+        # print('user: ', user)
+
+        # Step 2: Extract the JWT token from the email
+        # This step might differ based on how you send the token in the email
+        self.assertEqual(len(mail.outbox), 1)
+        email_body = mail.outbox[0].body
+
+        # Find the start of the URL
+        token_start = email_body.find("http://yourfrontendwebsite.com/activate/") + len("http://yourfrontendwebsite.com/activate/")
+
+        # Find the end of the token
+        token_end = email_body.find("\n\nThanks!")
+        # Extract the token
+        token = email_body[token_start:token_end]
+
+        # Step 3: Activate the user using the JWT token
+        activation_url = reverse('accounts:activate', args=[token])
+        activation_response = self.client.get(activation_url)
+        
+        # print('content: ', activation_response.content)
+        self.assertEqual(activation_response.status_code, status.HTTP_200_OK)
+
+
+        # Step 4: Verify that the user is now active
+        user = get_user_model().objects.get(email='testuser@example.com')
+        self.assertTrue(user.is_active)
