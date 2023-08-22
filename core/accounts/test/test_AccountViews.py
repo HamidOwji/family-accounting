@@ -237,3 +237,18 @@ class PasswordResetTestCase(BaseTestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
+class ChangePasswordTestCase(BaseTestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def test_change_password(self):
+        url = reverse('accounts:change_password')
+        data = {'old_password': 'testpassword', 'new_password': 'newpassword'}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Verify new password
+        self.assertTrue(self.user.check_password('newpassword'))
+
