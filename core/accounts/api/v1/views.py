@@ -181,7 +181,7 @@ class PasswordResetRequestApiView(generics.GenericAPIView):
         # logger.debug("email is ready for sending!")
         # print("email is ready for sending!")
         encoded_token = base64.urlsafe_b64encode(token.encode()).decode()
-        reset_url = f"http://localhost:5173/password-reset/confirm/{encoded_token}"
+        reset_url = f"http://localhost:5173/accounts/api/v1/password-reset/confirm/{encoded_token}"
         send_mail(
             'Password Reset Request',
             f'Click here to reset your password: {reset_url}',
