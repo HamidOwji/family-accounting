@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,42 +8,44 @@ import usePostData from '../hooks/usePostData';
 import { styles } from '../styles/auth.styles';
 import FormManager from '../hoc/FormManager';
 
-export default function Login() {
-  const [postData, isLoading, data, error] = usePostData('http://localhost:8000/accounts/api/v1/login/');
+export default function ForgotPassword() {
+  const [postData, isLoading] = usePostData('http://localhost:8000/accounts/api/v1/password-reset/');
   const navigate = useNavigate();
 
   const handleSubmission = async (formData) => {
-    if (formData.email === '' || formData.password === '') {
-      alert('Email and password are required.');
-      return;
+    if (formData.email === '') {
+        alert('Email is required.');
+        return;
     }
 
-    const { email, password } = formData;
-    const dataToSend = {
-      email: email,
-      password: password,
-    };
+    const { email } = formData;
+    const dataToSend = { email };
 
-    const response = await postData(dataToSend);
+    try {
+        const response = await postData(dataToSend);
 
-    if (response.data && response.data.success) {
-      navigate('/operations');
-    } else {
-      // Display the error message from the server
-      alert(response.data.error || 'Unknown error');
+        if (response && response.data && response.data.detail) {
+            alert(response.data.detail);  // Use the detail message from the response
+            navigate('/login');
+        } else {
+            alert(response.data.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error("Error during password reset request:", error);
+        alert('An error occurred. Please try again later.');
     }
-  };
+};
 
   return (
     <FormManager
-      initialValues={{ email: '', password: '' }}
+      initialValues={{ email: '' }}
       onSubmit={(formData) => handleSubmission(formData)}
     >
       {({ formData, handleChange, handleSubmit }) => (
         <Box sx={styles.mainBox}>
           <Box sx={styles.innerBox}>
             <Typography variant="h3" sx={styles.heading}>
-              Login!
+              Forgot Password
             </Typography>
             <Box
               component="form"
@@ -59,27 +61,14 @@ export default function Login() {
                 value={formData.email}
                 onChange={handleChange}
               />
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                name='password'
-                value={formData.password}
-                onChange={handleChange}
-              />
               <Button
                 variant="contained"
                 color="secondary"
                 type="submit"
                 disabled={isLoading}
               >
-                {isLoading ? 'Logging in...' : 'Login!'}
+                {isLoading ? 'Sending...' : 'Send'}
               </Button>
-              <Typography variant="body2" sx={{ mt: 2 }}>
-                <Link to="/forgot-password" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  Forgot Password?
-                </Link>
-              </Typography>
             </Box>
           </Box>
         </Box>

@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Operations from './pages/Operations';
 import Categories from './pages/Categories';
 import CategoryPage from './pages/CategoryPage';
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/operations" element={<Operations />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/incomes" element={<CategoryPage category="income-category" />} />
