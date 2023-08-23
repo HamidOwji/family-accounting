@@ -28,7 +28,12 @@ from ...models.profiles import Profile
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
 from django.template.loader import render_to_string
+import logging
+import base64
 
+
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -173,7 +178,10 @@ class PasswordResetRequestApiView(generics.GenericAPIView):
         token = jwt.encode(token_data, settings.SECRET_KEY, algorithm='HS256')
         
         # Send email with the token
-        reset_url = f"http://yourfrontendwebsite.com/reset-password/{token}"
+        # logger.debug("email is ready for sending!")
+        # print("email is ready for sending!")
+        encoded_token = base64.urlsafe_b64encode(token.encode()).decode()
+        reset_url = f"http://localhost:5173/password-reset/confirm/{encoded_token}"
         send_mail(
             'Password Reset Request',
             f'Click here to reset your password: {reset_url}',
@@ -188,11 +196,14 @@ class PasswordResetRequestApiView(generics.GenericAPIView):
 class SetNewPasswordApiView(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+    def post(self, request, token):
+        data = request.data.copy()
+        data['token'] = token  # Add the token from the URL to the request data
+        serializer = self.serializer_class(data=data)
+        if not serializer.is_valid():
+            print(serializer.errors)
         serializer.is_valid(raise_exception=True)
         
-        token = serializer.validated_data['token']
         try:
             decoded_data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             user_id = decoded_data.get('user_id')
@@ -206,20 +217,20 @@ class SetNewPasswordApiView(generics.GenericAPIView):
             return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ChangePasswordApiView(generics.UpdateAPIView):
-    model = User
-    permission_classes = [IsAuthenticated]
-    serializer_class = ChangePasswordSerializer
+# class ChangePasswordApiView(generics.UpdateAPIView):
+#     model = User
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = ChangePasswordSerializer
 
-    def update(self, request, *args, **kwargs):
-        user = request.user
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            # Check old password
-            if not user.check_password(serializer.validated_data.get('old_password')):
-                return Response({'old_password': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
-            # Set the new password
-            user.set_password(serializer.validated_data.get('new_password'))
-            user.save()
-            return Response({'detail': 'Password updated successfully.'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def update(self, request, *args, **kwargs):
+#         user = request.user
+#         serializer = self.get_serializer(data=request.data)
+#         if serializer.is_valid():
+#             # Check old password
+#             if not user.check_password(serializer.validated_data.get('old_password')):
+#                 return Response({'old_password': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
+#             # Set the new password
+#             user.set_password(serializer.validated_data.get('new_password'))
+#             user.save()
+#             return Response({'detail': 'Password updated successfully.'})
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

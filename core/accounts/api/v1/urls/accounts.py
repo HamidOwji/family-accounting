@@ -9,8 +9,7 @@ from ..views import (RegistrationApiView,
                     CustomTokenObtainPairView,
                     ProfileApiView,
                     PasswordResetRequestApiView,
-                    SetNewPasswordApiView,
-                    ChangePasswordApiView)
+                    SetNewPasswordApiView)
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -27,7 +26,9 @@ urlpatterns = [
     path('token/jwt/', CustomTokenObtainPairView.as_view(), name='token_jwt_obtain_pair'),
     path('profile/', ProfileApiView.as_view(), name='profile'),
     path('password-reset/', PasswordResetRequestApiView.as_view(), name='password_reset_request'),
-    path('password-reset/confirm/', SetNewPasswordApiView.as_view(), name='password_reset_confirm'),
-    path('change-password/', ChangePasswordApiView.as_view(), name='change_password'),
+    # path('password-reset/confirm/', SetNewPasswordApiView.as_view(), name='password_reset_confirm'),
+    path('password-reset/confirm/<str:token>/', SetNewPasswordApiView.as_view(), name='password_reset_confirm'),
+
+    # path('change-password/', ChangePasswordApiView.as_view(), name='change_password'),
 ]
 
