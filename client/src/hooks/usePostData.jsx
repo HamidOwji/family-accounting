@@ -25,12 +25,17 @@ const usePostData = (url) => {
     
             setData(response.data);
             setIsLoading(false);
+            return { data: response.data };
         } catch (err) {
-            setError(err.message);
+            const errorMessage = err.response && err.response.data && err.response.data.error
+            ? err.response.data.error
+            : err.message;
+        
+            setError(errorMessage);
             setIsLoading(false);
+            return { data: { error: errorMessage } };
         }
     
-        return response
     };
     
     

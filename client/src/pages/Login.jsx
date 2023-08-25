@@ -25,13 +25,17 @@ export default function Login() {
     };
 
     const response = await postData(dataToSend);
+    // console.log(error);
+    // console.log(data);
 
-    if (response.data && response.data.success) {
+    if (response.data && response.data.error) {
+      alert(response.data.error);
+  } else if (response.data && response.data.success) {
       navigate('/operations');
-    } else {
-      // Display the error message from the server
-      alert(response.data.error || 'Unknown error');
-    }
+  } else {
+      alert('Unknown error');
+  }
+
   };
 
   return (
