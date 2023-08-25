@@ -44,6 +44,12 @@ export const styles = {
         p: 3,
         width: '100%',
     },
+    img: {
+        width: '4rem',
+        height: 'auto',
+        mb: 2,
+        filter: 'opacity(50%)',
+      },
     icon: {
         color:'secondary.main',
       cursor: 'pointer'

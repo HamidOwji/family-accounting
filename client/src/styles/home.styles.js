@@ -27,7 +27,7 @@ export const styles = {
         pl: 3,
       },
       img: {
-        width: '200px',
+        width: '14rem',
         height: 'auto',
         mb: 2,
         filter: 'opacity(50%)',
