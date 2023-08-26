@@ -14,7 +14,7 @@ export default function AppFrame({ children }) {
                 <Box  sx={ styles.thirdBox } >
                     <Box
                         component="img"
-                        src='/assets/logo.svg'
+                        src='/assets/logo.png'
                         alt="Logo"
                         sx={styles.img}>
                     </Box>

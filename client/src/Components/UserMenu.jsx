@@ -40,8 +40,8 @@ export default function MenuPopupState() {
                         <PermIdentityIcon sx={styles.icon} {...bindTrigger(popupState)}/>
                     </Box>
                     <Menu {...bindMenu(popupState)}>
+                        <MenuItem onClick={popupState.close}>Home page</MenuItem>
                         <MenuItem onClick={popupState.close}>Profile</MenuItem>
-                        <MenuItem onClick={popupState.close}>My account</MenuItem>
                         <MenuItem onClick={handleLogout}><LogoutOutlinedIcon sx={ styles.icon }/></MenuItem>
                     </Menu>
                 </React.Fragment>
